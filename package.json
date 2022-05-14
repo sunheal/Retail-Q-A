@@ -1,0 +1,25 @@
+{
+  "name": "sunheal_questions_and_answers_service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rpp34-sdc-blade/sunheal-qa.git"
+  },
+  "author": "Alan Li",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rpp34-sdc-blade/sunheal-qa/issues"
+  },
+  "homepage": "https://github.com/rpp34-sdc-blade/sunheal-qa#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  },
+  "devDependencies": {
+    "jest": "^28.1.0"
+  }
+}
