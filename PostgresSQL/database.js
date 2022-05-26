@@ -10,11 +10,23 @@ const pool = new Pool({
   idleTimeoutMillis: 0, // if all connections are not in use when do you want db to end. zero means db never end.
 });
 
-const getQuestions = () => {
-  pool
-    .query(`
-      SELECT id
-    `)
+const getQuestions = async (product_id) => {
+  try {
+    const data = await pool.query(`
+      SELECT
+        id AS question_id,
+        body AS question_body,
+        TO_TIMESTAMP(date / 1000)::date AS question_date,
+        asker_name,
+        helpfulness AS question_helpfulness,
+        reported
+      FROM qa.questions
+      WHERE product_id = ${product_id};
+    `);
+    return data;
+  } catch (err) {
+    console.error('getQuestions Error', err);
+  }
 }
 
 const getAnswersAndPhotos = async (question_id) => {
@@ -43,13 +55,13 @@ const getAnswers = async (question_id) => {
   try {
     const data = await pool.query(`
       SELECT
-        answers.id AS answer_id,
-        answers.body,
-        TO_TIMESTAMP(answers.date / 1000)::date AS date,
-        answers.answerer_name,
-        answers.helpfulness
+        id AS answer_id,
+        body,
+        TO_TIMESTAMP(date / 1000)::date AS date,
+        answerer_name,
+        helpfulness
       FROM qa.answers
-      WHERE answers.question_id = ${question_id};
+      WHERE question_id = ${question_id};
     `);
     return data;
   } catch(err) {
@@ -71,4 +83,4 @@ const getPhotos = async (answer_id) => {
 }
 
 // module.exports.getAnswersAndPhotos = getAnswersAndPhotos;
-module.exports = { getAnswersAndPhotos, getAnswers, getPhotos }
+module.exports = { getQuestions, getAnswersAndPhotos, getAnswers, getPhotos }

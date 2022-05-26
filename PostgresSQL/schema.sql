@@ -9,7 +9,7 @@ CREATE TABLE qa.questions (
   date BIGINT,
   asker_name VARCHAR(50),
   asker_email VARCHAR(100),
-  reported INT DEFAULT 0,
+  reported BOOLEAN DEFAULT '0',
   helpfulness INT DEFAULT 0
 );
 
@@ -20,7 +20,7 @@ CREATE TABLE qa.answers (
   date BIGINT,
   answerer_name VARCHAR(50),
   answerer_email VARCHAR(100),
-  reported INT DEFAULT 0,
+  reported BOOLEAN DEFAULT '0',
   helpfulness INT DEFAULT 0
 );
 

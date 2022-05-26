@@ -1,11 +1,44 @@
 const express = require('express');
 const app = express();
 const port = 3000;
-const { getAnswersAndPhotos, getAnswers, getPhotos }= require('./PostgresSQL/database');
+const { getQuestions, getAnswersAndPhotos, getAnswers, getPhotos }= require('./PostgresSQL/database');
 
 //express.json() and express.urlencoded() are built-in middleware functions to support JSON-encoded and URL-encoded bodies so that we could use req.body with POST Parameters
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+const loadPhotosToAnswers = async (answers) => {
+  const answer_ids = answers.map(answer => answer.answer_id);
+  const photosArr = await Promise.all(answer_ids.map(answer_id => getPhotos(answer_id)));
+  const photos = photosArr.map(photoObj => photoObj.rows);
+  for (let i = 0; i < answers.length; i++) {
+    answers[i].photos = photos[i];
+  }
+  return answers;
+}
+
+app.get('/qa/questions/:product_id', async (req, res) => {
+  try {
+    const { product_id }= req.params;
+    const questionsData = await getQuestions(product_id);
+    const questions = questionsData.rows;
+    const question_ids = questions.map(question => question.question_id);
+    const answerPromise = Promise.all(question_ids.map(question_id => getAnswers(question_id)));
+    const answersData = await answerPromise;
+    const answersArr = answersData.map(answerObj => answerObj.rows);
+    const answersWithPhotos = await Promise.all(answersArr.map(answers => loadPhotosToAnswers(answers)));
+    for (let i = 0; i < questions.length; i++) {
+      questions[i].answers = {};
+      for (let answersWithPhoto of answersWithPhotos[i]) {
+        questions[i].answers[answersWithPhoto.answer_id] = answersWithPhoto;
+      }
+    }
+    res.status(200).send(questions);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('server get questions error');
+  }
+});
 
 app.get('/qa/questions/:question_id/answers', async (req, res) => {
   try {
@@ -18,15 +51,10 @@ app.get('/qa/questions/:question_id/answers', async (req, res) => {
       count = 5;
     }
     // const data = await getAnswersAndPhotos(question_id)
-    const answers = await getAnswers(question_id);
-    const answer_ids = answers.rows.map(answer => answer.answer_id);
-    const photosPromise = Promise.all(answer_ids.map(answer_id => getPhotos(answer_id)));
-    const photosArr = await photosPromise;
-    const photos = photosArr.map(photoObj => photoObj.rows);
-    for (let i = 0; i < answers.rows.length; i++) {
-      answers.rows[i].photos = photos[i];
-    }
-    res.status(200).send(answers.rows);
+    const answersData = await getAnswers(question_id);
+    const answers = answersData.rows;
+    const answersWithPhoto = await loadPhotosToAnswers(answers);
+    res.status(200).send(answersWithPhoto);
   } catch(err) {
     console.error(err);
     res.status(500).send('server get answers error');
