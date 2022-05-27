@@ -82,5 +82,16 @@ const getPhotos = async (answer_id) => {
   }
 }
 
+const postQuestion = async (product_id, body, asker_name, asker_email) => {
+  try {
+    const text = 'INSERT INTO qa.questions(product_id, body, date, asker_name, asker_email) VALUES($1, $2, $3, $4, $5) RETURNING *';
+    const values = [product_id, body, Date.now(), asker_name, asker_email]
+    const data = await pool.query(text, values);
+    return data;
+  } catch (err) {
+    console.error('postQuestion Error', err);
+  }
+}
+
 // module.exports.getAnswersAndPhotos = getAnswersAndPhotos;
-module.exports = { getQuestions, getAnswersAndPhotos, getAnswers, getPhotos }
+module.exports = { getQuestions, getAnswersAndPhotos, getAnswers, getPhotos, postQuestion }
