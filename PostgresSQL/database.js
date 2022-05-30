@@ -88,10 +88,71 @@ const postQuestion = async (product_id, body, asker_name, asker_email) => {
     const values = [product_id, body, Date.now(), asker_name, asker_email]
     const data = await pool.query(text, values);
     return data;
-  } catch (err) {
+  } catch(err) {
     console.error('postQuestion Error', err);
   }
 }
 
-// module.exports.getAnswersAndPhotos = getAnswersAndPhotos;
-module.exports = { getQuestions, getAnswersAndPhotos, getAnswers, getPhotos, postQuestion }
+const postAnswer = async (question_id, body, answerer_name, answerer_email) => {
+  try {
+    const text = 'INSERT INTO qa.answers(question_id, body, date, answerer_name, answerer_email) VALUES($1, $2, $3, $4, $5) RETURNING *';
+    const values = [question_id, body, Date.now(), answerer_name, answerer_email];
+    const data = await pool.query(text, values);
+    return data;
+  } catch(err) {
+    console.error('postAnswer Error', err);
+  }
+}
+
+const postPhotos = async (answer_id, url) => {
+  try {
+    const text = 'INSERT INTO qa.answers_photos(answer_id, url) VALUES($1, $2) RETURNING id, url';
+    const values = [answer_id, url];
+    const data = await pool.query(text, values);
+    return data;
+  } catch(err) {
+    console.error('postPhotos Error', err);
+  }
+}
+
+const markQuestionHelpful = async (question_id) => {
+  try {
+    const text = 'UPDATE qa.questions SET helpfulness = helpfulness + 1 WHERE id = $1 RETURNING *';
+    const values = [question_id];
+    await pool.query(text, values);
+  } catch (err) {
+    console.error('markQuestionHelpful Error', err);
+  }
+}
+
+const markAnswerHelpful = async (answer_id) => {
+  try {
+    const text = 'UPDATE qa.answers SET helpfulness = helpfulness + 1 WHERE id = $1 RETURNING *';
+    const values = [answer_id];
+    await pool.query(text, values);
+  } catch (err) {
+    console.error('markAnswerHelpful Error', err);
+  }
+}
+
+const reportQuestion = async (question_id) => {
+  try {
+    const text = 'UPDATE qa.questions SET reported = true WHERE id = $1 RETURNING *';
+    const values = [question_id];
+    await pool.query(text, values);
+  } catch(err) {
+    console.error('reportQuestion Error', err)
+  }
+}
+
+const reportAnswer = async (answer_id) => {
+  try {
+    const text = 'UPDATE qa.answers SET reported = true WHERE id = $1 RETURNING *';
+    const values = [answer_id];
+    await pool.query(text, values);
+  } catch(err) {
+    console.error('reportAnswer Error', err)
+  }
+}
+
+module.exports = { getQuestions, getAnswersAndPhotos, getAnswers, getPhotos, postQuestion, postAnswer, postPhotos, markQuestionHelpful, markAnswerHelpful, reportQuestion, reportAnswer }

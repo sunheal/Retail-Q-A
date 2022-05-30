@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const port = 3000;
-const { getQuestions, getAnswers, getPhotos, postQuestion }= require('./PostgresSQL/database');
+const { getQuestions, getAnswers, getPhotos, postQuestion, postAnswer, postPhotos, markQuestionHelpful, markAnswerHelpful, reportQuestion, reportAnswer }= require('./PostgresSQL/database');
 
 //express.json() and express.urlencoded() are built-in middleware functions to support JSON-encoded and URL-encoded bodies so that we could use req.body with POST Parameters
 app.use(express.json());
@@ -33,7 +33,7 @@ app.get('/qa/questions/:product_id', async (req, res) => {
       }
     }
     res.status(200).send(questions);
-  } catch (err) {
+  } catch(err) {
     console.error(err);
     res.status(500).send('server get questions error');
   }
@@ -63,13 +63,73 @@ app.post('/qa/questions', async (req, res) => {
   try {
     const { product_id, body, name, email  } = req.body;
     const data = await postQuestion(product_id, body, name, email);
-    const postedQuestion = data.rows;
+    const postedQuestion = data.rows[0];
     res.status(201).send(postedQuestion);
-  } catch (err) {
+  } catch(err) {
     console.error(err);
     res.status(500).send('server post question error');
-  };
-})
+  }
+});
+
+app.post('/qa/questions/:question_id/answers', async (req, res) => {
+  try {
+    const { question_id } = req.params;
+    const { body, name, email, photos } = req.body;
+    const answerData = await postAnswer(question_id, body, name, email);
+    const answer = answerData.rows[0];
+    const answer_id = answer.id;
+    const answers_photosData = await Promise.all(photos.map(photoUrl => postPhotos(answer_id, photoUrl)));
+    answer.photos = answers_photosData.map(answers_photoData => answers_photoData.rows[0]);
+    res.status(201).send(answer);
+  } catch(err) {
+    console.error(err);
+    res.status(500).send('server post answer error');
+  }
+});
+
+app.put('/qa/questions/:question_id/helpful', async (req, res) => {
+  try {
+    const { question_id } = req.params;
+    await markQuestionHelpful(question_id);
+    res.status(204).send(`Question Id ${question_id} Marked Helpful`);
+  } catch(err) {
+    console.error(err);
+    res.status(500).send('server put question helpful error');
+  }
+});
+
+app.put('/qa/answers/:answer_id/helpful', async (req, res) => {
+  try {
+    const { answer_id } = req.params;
+    await markAnswerHelpful(answer_id);
+    res.status(204).send(`Answer Id ${answer_id} Marked Helpful`);
+  } catch(err) {
+    console.error(err);
+    res.status(500).send('server put question helpful error');
+  }
+});
+
+app.put('/qa/questions/:question_id/report', async (req, res) => {
+  try {
+    const { question_id } = req.params;
+    await reportQuestion(question_id);
+    res.status(204).send();
+  } catch(err) {
+    console.error(err);
+    res.status(500).send('server put question reported error');
+  }
+});
+
+app.put('/qa/answers/:answer_id/report', async (req, res) => {
+  try {
+    const { answer_id } = req.params;
+    await reportAnswer(answer_id);
+    res.status(204).send();
+  } catch(err) {
+    console.error(err);
+    res.status(500).send('server put answer reported error');
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`)});
