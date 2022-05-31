@@ -10,7 +10,7 @@ const pool = new Pool({
   idleTimeoutMillis: 0, // if all connections are not in use when do you want db to end. zero means db never end.
 });
 
-const getQuestions = async (product_id) => {
+const getQuestions = async (product_id, count) => {
   try {
     const data = await pool.query(`
       SELECT
@@ -21,7 +21,8 @@ const getQuestions = async (product_id) => {
         helpfulness AS question_helpfulness,
         reported
       FROM qa.questions
-      WHERE product_id = ${product_id};
+      WHERE product_id = ${product_id}
+      LIMIT ${count};
     `);
     return data;
   } catch (err) {
@@ -29,7 +30,7 @@ const getQuestions = async (product_id) => {
   }
 }
 
-const getAnswersAndPhotos = async (question_id) => {
+const getAnswersAndPhotos = async (question_id, count) => {
   try {
     const data = await pool.query(`
       SELECT
@@ -51,8 +52,11 @@ const getAnswersAndPhotos = async (question_id) => {
   }
 }
 
-const getAnswers = async (question_id) => {
+const getAnswers = async (question_id, count) => {
   try {
+    if (!count) {
+      count = 50;
+    }
     const data = await pool.query(`
       SELECT
         id AS answer_id,
@@ -61,7 +65,8 @@ const getAnswers = async (question_id) => {
         answerer_name,
         helpfulness
       FROM qa.answers
-      WHERE question_id = ${question_id};
+      WHERE question_id = ${question_id}
+      LIMIT ${count};
     `);
     return data;
   } catch(err) {
