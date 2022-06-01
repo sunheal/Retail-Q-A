@@ -30,28 +30,6 @@ const getQuestions = async (product_id, count) => {
   }
 }
 
-const getAnswersAndPhotos = async (question_id, count) => {
-  try {
-    const data = await pool.query(`
-      SELECT
-        answers.id AS answer_id,
-        answers.body,
-        TO_TIMESTAMP(answers.date / 1000)::date AS date,
-        answers.answerer_name,
-        answers.helpfulness,
-        answers_photos.id as photo_id,
-        answers_photos.url
-      FROM qa.answers
-      LEFT JOIN qa.answers_photos
-      ON answers.id = answers_photos.answer_id
-      WHERE answers.question_id = ${question_id};
-    `);
-    return data;
-  } catch(err) {
-    console.error('getAnswersAndPhotos Error', err);
-  }
-}
-
 const getAnswers = async (question_id, count) => {
   try {
     if (!count) {
@@ -160,4 +138,4 @@ const reportAnswer = async (answer_id) => {
   }
 }
 
-module.exports = { getQuestions, getAnswersAndPhotos, getAnswers, getPhotos, postQuestion, postAnswer, postPhotos, markQuestionHelpful, markAnswerHelpful, reportQuestion, reportAnswer }
+module.exports = { getQuestions, getAnswers, getPhotos, postQuestion, postAnswer, postPhotos, markQuestionHelpful, markAnswerHelpful, reportQuestion, reportAnswer }
