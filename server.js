@@ -7,26 +7,12 @@ const { aggregate_getQuestions, aggregate_getAnswers, getQuestions, getAnswers, 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const loadPhotosToAnswers = async (answers) => {
-  const answer_ids = answers.map(answer => answer.answer_id);
-  const photosArr = await Promise.all(answer_ids.map(answer_id => getPhotos(answer_id)));
-  const photos = photosArr.map(photoObj => photoObj.rows);
-  for (let i = 0; i < answers.length; i++) {
-    answers[i].photos = photos[i];
-  }
-  return answers;
-}
-
 // Using Postgres Aggregate Functions to get questions
 app.get('/qa/questions/', async (req, res) => {
   try {
     let { product_id, page, count } = req.query;
-    if (!page) {
-      page = 1;
-    }
-    if (!count) {
-      count = 5;
-    }
+    page = page || 1;
+    count = count || 5;
     const offset = (page - 1) * count;
     const questionsData = await aggregate_getQuestions(product_id, count, offset);
     const questions = { product_id };
@@ -42,12 +28,8 @@ app.get('/qa/questions/:question_id/answers', async (req, res) => {
   try {
     const { question_id }= req.params;
     let { page, count } = req.query;
-    if (!page) {
-      page = 1;
-    }
-    if (!count) {
-      count = 5;
-    }
+    page = page || 1;
+    count = count || 5;
     const offset = (page - 1) * count;
     const answers = {question: question_id, page, count};
     const answersData = await aggregate_getAnswers(question_id, count, offset);
@@ -61,15 +43,21 @@ app.get('/qa/questions/:question_id/answers', async (req, res) => {
 });
 
 // // CONVERT TO REQUIRED DATA FORMAT IN SERVER BY MULTIPLE DB QUERIES
+// const loadPhotosToAnswers = async (answers) => {
+//   const answer_ids = answers.map(answer => answer.answer_id);
+//   const photosArr = await Promise.all(answer_ids.map(answer_id => getPhotos(answer_id)));
+//   const photos = photosArr.map(photoObj => photoObj.rows);
+//   for (let i = 0; i < answers.length; i++) {
+//     answers[i].photos = photos[i];
+//   }
+//   return answers;
+// }
+// // CONVERT TO REQUIRED DATA FORMAT IN SERVER BY MULTIPLE DB QUERIES
 // app.get('/qa/questions/', async (req, res) => {
 //   try {
 //     let { product_id, page, count } = req.query;
-//     if (!page) {
-//       page = 1;
-//     }
-//     if (!count) {
-//       count = 5;
-//     }
+//     page = page || 1;
+//     count = count || 5;
 //     const offset = (page - 1) * count;
 //     const questionsData = await getQuestions(product_id, count, offset);
 //     const questions = { product_id };
@@ -95,12 +83,8 @@ app.get('/qa/questions/:question_id/answers', async (req, res) => {
 //   try {
 //     const { question_id }= req.params;
 //     let { page, count } = req.query;
-//     if (!page) {
-//       page = 1;
-//     }
-//     if (!count) {
-//       count = 5;
-//     }
+//     page = page || 1;
+//     count = count || 5;
 //     const offset = (page - 1) * count;
 //     const answers = {question: question_id, page, count};
 //     const answersData = await getAnswers(question_id, count, offset);
@@ -145,7 +129,7 @@ app.put('/qa/questions/:question_id/helpful', async (req, res) => {
   try {
     const { question_id } = req.params;
     await markQuestionHelpful(question_id);
-    res.status(204).send(`Question Id ${question_id} Marked Helpful`);
+    res.status(204).send();
   } catch(err) {
     console.error(err);
     res.status(500).send('server put question helpful error');
@@ -156,7 +140,7 @@ app.put('/qa/answers/:answer_id/helpful', async (req, res) => {
   try {
     const { answer_id } = req.params;
     await markAnswerHelpful(answer_id);
-    res.status(204).send(`Answer Id ${answer_id} Marked Helpful`);
+    res.status(204).send();
   } catch(err) {
     console.error(err);
     res.status(500).send('server put question helpful error');
