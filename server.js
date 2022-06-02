@@ -1,9 +1,7 @@
 const express = require('express');
 const app = express();
 const port = 3000;
-const { getQuestions, getAnswers, getPhotos, postQuestion, postAnswer, postPhotos, markQuestionHelpful, markAnswerHelpful, reportQuestion, reportAnswer }= require('./PostgresSQL/database');
-
-const { aggregate_getQuestions, aggregate_getAnswers }= require('./PostgresSQL/db_aggregate');
+const { aggregate_getQuestions, aggregate_getAnswers, getQuestions, getAnswers, getPhotos, postQuestion, postAnswer, postPhotos, markQuestionHelpful, markAnswerHelpful, reportQuestion, reportAnswer }= require('./PostgresSQL/database');
 
 //express.json() and express.urlencoded() are built-in middleware functions to support JSON-encoded and URL-encoded bodies so that we could use req.body with POST Parameters
 app.use(express.json());
@@ -19,41 +17,18 @@ const loadPhotosToAnswers = async (answers) => {
   return answers;
 }
 
-// What is query param PAGE about?????
-app.get('/qa/questions/', async (req, res) => {
-  try {
-    let { product_id, page, count } = req.query;
-    if (!count) {
-      count = 5;
-    }
-    const questionsData = await getQuestions(product_id, count);
-    const questions = { product_id };
-    questions.results = questionsData.rows;
-    const question_ids = questions.results.map(question => question.question_id);
-    const answersData = await Promise.all(question_ids.map(question_id => getAnswers(question_id)));
-    const answersArr = answersData.map(answerObj => answerObj.rows);
-    const answersWithPhotos = await Promise.all(answersArr.map(answers => loadPhotosToAnswers(answers)));
-    for (let i = 0; i < questions.results.length; i++) {
-      questions.results[i].answers = {};
-      for (let answersWithPhoto of answersWithPhotos[i]) {
-        questions.results[i].answers[answersWithPhoto.answer_id] = answersWithPhoto;
-      }
-    }
-    res.status(200).send(questions);
-  } catch(err) {
-    console.error(err);
-    res.status(500).send('server get questions error');
-  }
-});
-
 // Using Postgres Aggregate Functions to get questions
 app.get('/qa/questions/', async (req, res) => {
   try {
     let { product_id, page, count } = req.query;
+    if (!page) {
+      page = 1;
+    }
     if (!count) {
       count = 5;
     }
-    const questionsData = await aggregate_getQuestions(product_id, count);
+    const offset = (page - 1) * count;
+    const questionsData = await aggregate_getQuestions(product_id, count, offset);
     const questions = { product_id };
     questions.results = questionsData.rows;
     res.status(200).send(questions);
@@ -62,29 +37,6 @@ app.get('/qa/questions/', async (req, res) => {
     res.status(500).send('server get questions error');
   }
 });
-
-// What is query param PAGE about?????
-// app.get('/qa/questions/:question_id/answers', async (req, res) => {
-//   try {
-//     const { question_id }= req.params;
-//     let { page, count } = req.query;
-//     if (!page) {
-//       page = 1;
-//     }
-//     if (!count) {
-//       count = 5;
-//     }
-//     const answers = {question: question_id, page, count};
-//     const answersData = await getAnswers(question_id, count);
-//     const answerWithoutPhotos = answersData.rows;
-//     answers.results = await loadPhotosToAnswers(answerWithoutPhotos);
-//     res.status(200).send(answers);
-//   } catch(err) {
-//     console.error(err);
-//     res.status(500).send('server get answers error');
-//   }
-// });
-
 // Using Postgres Aggregate Functions to get answers
 app.get('/qa/questions/:question_id/answers', async (req, res) => {
   try {
@@ -96,8 +48,9 @@ app.get('/qa/questions/:question_id/answers', async (req, res) => {
     if (!count) {
       count = 5;
     }
+    const offset = (page - 1) * count;
     const answers = {question: question_id, page, count};
-    const answersData = await aggregate_getAnswers(question_id, count);
+    const answersData = await aggregate_getAnswers(question_id, count, offset);
     const answerWithoutPhotos = answersData.rows;
     answers.results = answersData.rows;
     res.status(200).send(answers);
@@ -106,6 +59,59 @@ app.get('/qa/questions/:question_id/answers', async (req, res) => {
     res.status(500).send('server get answers error');
   }
 });
+
+// // CONVERT TO REQUIRED DATA FORMAT IN SERVER BY MULTIPLE DB QUERIES
+// app.get('/qa/questions/', async (req, res) => {
+//   try {
+//     let { product_id, page, count } = req.query;
+//     if (!page) {
+//       page = 1;
+//     }
+//     if (!count) {
+//       count = 5;
+//     }
+//     const offset = (page - 1) * count;
+//     const questionsData = await getQuestions(product_id, count, offset);
+//     const questions = { product_id };
+//     questions.results = questionsData.rows;
+//     const question_ids = questions.results.map(question => question.question_id);
+//     const answersData = await Promise.all(question_ids.map(question_id => getAnswers(question_id)));
+//     const answersArr = answersData.map(answerObj => answerObj.rows);
+//     const answersWithPhotos = await Promise.all(answersArr.map(answers => loadPhotosToAnswers(answers)));
+//     for (let i = 0; i < questions.results.length; i++) {
+//       questions.results[i].answers = {};
+//       for (let answersWithPhoto of answersWithPhotos[i]) {
+//         questions.results[i].answers[answersWithPhoto.answer_id] = answersWithPhoto;
+//       }
+//     }
+//     res.status(200).send(questions);
+//   } catch(err) {
+//     console.error(err);
+//     res.status(500).send('server get questions error');
+//   }
+// });
+// // CONVERT TO REQUIRED DATA FORMAT IN SERVER BY MULTIPLE DB QUERIES
+// app.get('/qa/questions/:question_id/answers', async (req, res) => {
+//   try {
+//     const { question_id }= req.params;
+//     let { page, count } = req.query;
+//     if (!page) {
+//       page = 1;
+//     }
+//     if (!count) {
+//       count = 5;
+//     }
+//     const offset = (page - 1) * count;
+//     const answers = {question: question_id, page, count};
+//     const answersData = await getAnswers(question_id, count, offset);
+//     const answerWithoutPhotos = answersData.rows;
+//     answers.results = await loadPhotosToAnswers(answerWithoutPhotos);
+//     res.status(200).send(answers);
+//   } catch(err) {
+//     console.error(err);
+//     res.status(500).send('server get answers error');
+//   }
+// });
 
 app.post('/qa/questions', async (req, res) => {
   try {

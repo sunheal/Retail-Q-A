@@ -35,7 +35,8 @@ SELECT
   ) AS answers
 FROM qa.questions
 WHERE product_id = ${product_id}
-LIMIT ${count};
+LIMIT ${count}
+OFFSET ${offset};
 
 
 -- GET Answers --
@@ -51,4 +52,5 @@ SELECT
     (SELECT qa.answers_photos.id, qa.answers_photos.url FROM qa.answers_photos WHERE qa.answers_photos.answer_id = qa.answers.id) AS photo_list) AS photos
 FROM qa.answers
 WHERE question_id = ${question_id}
-LIMIT ${count};
+LIMIT ${count}
+OFFSET ${offset};
