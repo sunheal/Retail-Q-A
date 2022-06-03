@@ -1,7 +1,7 @@
 const express = require('express');
 const app = express();
 const port = 3000;
-const { aggregate_getQuestions, aggregate_getAnswers, getQuestions, getAnswers, getPhotos, postQuestion, postAnswer, postPhotos, markQuestionHelpful, markAnswerHelpful, reportQuestion, reportAnswer }= require('./PostgresSQL/database');
+const { aggregate_getQuestions, aggregate_getAnswers, getQuestions, getAnswers, getPhotos, postQuestion, postAnswer, postPhotos, markQuestionHelpful, markAnswerHelpful, reportQuestion, reportAnswer }= require('../PostgresSQL/database');
 
 //express.json() and express.urlencoded() are built-in middleware functions to support JSON-encoded and URL-encoded bodies so that we could use req.body with POST Parameters
 app.use(express.json());
@@ -169,5 +169,10 @@ app.put('/qa/answers/:answer_id/report', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`)});
+if (process.env.NODE_ENV !== "test") {
+  app.listen(port, () => {
+    console.log(`Server listening on port ${port}`)
+  });
+}
+
+  module.exports = app;

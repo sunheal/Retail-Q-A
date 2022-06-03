@@ -224,4 +224,4 @@ const reportAnswer = async (answer_id) => {
   }
 }
 
-module.exports = { aggregate_getQuestions, aggregate_getAnswers, getQuestions, getAnswers, getPhotos, postQuestion, postAnswer, postPhotos, markQuestionHelpful, markAnswerHelpful, reportQuestion, reportAnswer }
+module.exports = { pool, aggregate_getQuestions, aggregate_getAnswers, getQuestions, getAnswers, getPhotos, postQuestion, postAnswer, postPhotos, markQuestionHelpful, markAnswerHelpful, reportQuestion, reportAnswer }

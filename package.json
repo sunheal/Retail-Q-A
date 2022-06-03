@@ -4,8 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "jest",
-    "start": "nodemon server.js"
+    "test": "jest --coverage",
+    "start": "nodemon ./Server/server.js"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
     "pg": "^8.7.3"
   },
   "devDependencies": {
-    "jest": "^28.1.0"
+    "jest": "^28.1.0",
+    "supertest": "^6.2.3"
   }
 }
