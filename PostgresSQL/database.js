@@ -10,65 +10,67 @@ const pool = new Pool({
   idleTimeoutMillis: 0, // if all connections are not in use when do you want db to end. zero means db never end.
 });
 
-const getQuestions = async (product_id, count, offset) => {
-  try {
-    const data = await pool.query(`
-      SELECT
-        id AS question_id,
-        body AS question_body,
-        TO_TIMESTAMP(date / 1000)::date AS question_date,
-        asker_name,
-        helpfulness AS question_helpfulness,
-        reported
-      FROM qa.questions
-      WHERE product_id = ${product_id}
-      LIMIT ${count}
-      OFFSET ${offset};
-    `);
-    return data;
-  } catch (err) {
-    console.error('getQuestions Error', err);
-  }
-}
+// ---------------Non-aggregate Function---------------------
+// const getQuestions = async (product_id, count, offset) => {
+//   try {
+//     const data = await pool.query(`
+//       SELECT
+//         id AS question_id,
+//         body AS question_body,
+//         TO_TIMESTAMP(date / 1000)::date AS question_date,
+//         asker_name,
+//         helpfulness AS question_helpfulness,
+//         reported
+//       FROM qa.questions
+//       WHERE product_id = ${product_id}
+//       LIMIT ${count}
+//       OFFSET ${offset};
+//     `);
+//     return data;
+//   } catch (err) {
+//     console.error('getQuestions Error', err);
+//   }
+// }
 
-const getAnswers = async (question_id, count, offset) => {
-  try {
-    if (!count) {
-      count = 50;
-    }
-    if (!offset) {
-      offset = 0;
-    }
-    const data = await pool.query(`
-      SELECT
-        id AS answer_id,
-        body,
-        TO_TIMESTAMP(date / 1000)::date AS date,
-        answerer_name,
-        helpfulness
-      FROM qa.answers
-      WHERE question_id = ${question_id}
-      LIMIT ${count}
-      OFFSET ${offset};
-    `);
-    return data;
-  } catch(err) {
-    console.error('getAnswers Error', err);
-  }
-}
+// const getAnswers = async (question_id, count, offset) => {
+//   try {
+//     if (!count) {
+//       count = 50;
+//     }
+//     if (!offset) {
+//       offset = 0;
+//     }
+//     const data = await pool.query(`
+//       SELECT
+//         id AS answer_id,
+//         body,
+//         TO_TIMESTAMP(date / 1000)::date AS date,
+//         answerer_name,
+//         helpfulness
+//       FROM qa.answers
+//       WHERE question_id = ${question_id}
+//       LIMIT ${count}
+//       OFFSET ${offset};
+//     `);
+//     return data;
+//   } catch(err) {
+//     console.error('getAnswers Error', err);
+//   }
+// }
 
-const getPhotos = async (answer_id) => {
-  try {
-    const data = await pool.query(`
-    SELECT id , url
-    FROM qa.answers_photos
-    WHERE answer_id = ${answer_id};
-    `);
-    return data;
-  } catch(err) {
-    console.error('getPhotos Error', err);
-  }
-}
+// const getPhotos = async (answer_id) => {
+//   try {
+//     const data = await pool.query(`
+//     SELECT id , url
+//     FROM qa.answers_photos
+//     WHERE answer_id = ${answer_id};
+//     `);
+//     return data;
+//   } catch(err) {
+//     console.error('getPhotos Error', err);
+//   }
+// }
+// ---------------Non-aggregate Function---------------------
 
 const aggregate_getQuestions = async (product_id, count, offset) => {
   try {
@@ -224,4 +226,4 @@ const reportAnswer = async (answer_id) => {
   }
 }
 
-module.exports = { pool, aggregate_getQuestions, aggregate_getAnswers, getQuestions, getAnswers, getPhotos, postQuestion, postAnswer, postPhotos, markQuestionHelpful, markAnswerHelpful, reportQuestion, reportAnswer }
+module.exports = { pool, aggregate_getQuestions, aggregate_getAnswers, postQuestion, postAnswer, postPhotos, markQuestionHelpful, markAnswerHelpful, reportQuestion, reportAnswer }
