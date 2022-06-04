@@ -10,7 +10,7 @@ const pool = new Pool({
   idleTimeoutMillis: 0, // if all connections are not in use when do you want db to end. zero means db never end.
 });
 
-// ---------------Non-aggregate Function---------------------
+// ---------------Non-aggregate Function---------------------//
 // const getQuestions = async (product_id, count, offset) => {
 //   try {
 //     const data = await pool.query(`
@@ -70,7 +70,7 @@ const pool = new Pool({
 //     console.error('getPhotos Error', err);
 //   }
 // }
-// ---------------Non-aggregate Function---------------------
+// ---------------Non-aggregate Function---------------------//
 
 const aggregate_getQuestions = async (product_id, count, offset) => {
   try {
@@ -84,7 +84,7 @@ const aggregate_getQuestions = async (product_id, count, offset) => {
       reported,
       (
         SELECT
-          json_object_agg(key, value)
+          COALESCE (json_object_agg(key, value), '{}')
         FROM
           (SELECT
             answer_list.id AS key,
@@ -97,7 +97,7 @@ const aggregate_getQuestions = async (product_id, count, offset) => {
               qa.answers.answerer_name,
               qa.answers.helpfulness,
               (SELECT
-                jsonb_agg(to_jsonb(photo_list))
+                COALESCE (jsonb_agg(to_jsonb(photo_list)), '[]')
               FROM
                 (SELECT
                   qa.answers_photos.id, qa.answers_photos.url
@@ -133,7 +133,7 @@ const aggregate_getAnswers = async (question_id, count, offset) => {
         qa.answers.helpfulness,
         (
           SELECT
-            jsonb_agg(to_jsonb(photo_list))
+            COALESCE (jsonb_agg(to_jsonb(photo_list)), '[]')
           FROM
             (
               SELECT

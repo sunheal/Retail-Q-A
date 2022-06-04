@@ -304,7 +304,7 @@ describe('put /qa/answers/:answer_id/report', () => {
     await pool.query(`UPDATE qa.answers SET reported = false WHERE id = ${test_answer_id};`);
   });
 
-  it('should make a answer\'s reported to true and respond with a 204 status', async () => {
+  it('should mark a answer\'s reported to true and respond with a 204 status', async () => {
 
     // Check response
     const response = await request(app).put(`/qa/answers/${test_answer_id}/report`);

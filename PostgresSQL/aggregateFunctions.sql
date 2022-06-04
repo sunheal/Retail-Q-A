@@ -1,4 +1,3 @@
-
 -- GET Questions --
 SELECT
   id AS question_id,
@@ -9,7 +8,7 @@ SELECT
   reported,
   (
     SELECT
-      json_object_agg(key, value)
+      COALESCE (json_object_agg(key, value), '{}')
     FROM
       (SELECT
         answer_list.id AS key,
@@ -22,7 +21,7 @@ SELECT
           qa.answers.answerer_name,
           qa.answers.helpfulness,
           (SELECT
-            jsonb_agg(to_jsonb(photo_list))
+            COALESCE (jsonb_agg(to_jsonb(photo_list)), '[]')
           FROM
             (SELECT
               qa.answers_photos.id, qa.answers_photos.url
@@ -47,7 +46,7 @@ SELECT
   qa.answers.answerer_name,
   qa.answers.helpfulness,
   (SELECT
-    jsonb_agg(to_jsonb(photo_list))
+    COALESCE (jsonb_agg(to_jsonb(photo_list)), '[]')
   FROM
     (SELECT qa.answers_photos.id, qa.answers_photos.url FROM qa.answers_photos WHERE qa.answers_photos.answer_id = qa.answers.id) AS photo_list) AS photos
 FROM qa.answers
