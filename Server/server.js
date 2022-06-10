@@ -123,7 +123,7 @@ app.post('/qa/questions/:question_id/answers', async (req, res) => {
       answer.photos = [];
     }
 
-    res.status(201).json(answer);
+    res.status(201).send(answer);
   } catch(err) {
     console.error(err);
     res.status(500).send('server post answer error');
