@@ -26,7 +26,7 @@ describe('GET /qa/questions/', () => {
     expect(response.body.results[0].question_body).toBeDefined();
     expect(response.body.results[0].question_date).toBeDefined();
     expect(response.body.results[0].asker_name).toBeDefined();
-    expect(response.body.results[0].question_helpfulness).toBeGreaterThan(0);
+    expect(response.body.results[0].question_helpfulness).toBeGreaterThanOrEqual(0);
     expect(response.body.results[0].reported).toBeDefined();
     expect(response.body.results[0].answers).toBeDefined();
   });
@@ -68,7 +68,7 @@ describe('GET /qa/questions/:question_id/answers', () => {
     expect(response.body.results[0].body).toBeDefined();
     expect(response.body.results[0].date).toBeDefined();
     expect(response.body.results[0].answerer_name).toBeDefined();
-    expect(response.body.results[0].helpfulness).toBeGreaterThan(0);
+    expect(response.body.results[0].helpfulness).toBeGreaterThanOrEqual(0);
     expect(response.body.results[0].photos).toBeDefined();
   });
 
@@ -202,7 +202,7 @@ describe('POST /qa/questions/:question_id/answers', () => {
 
   it('should return error when invalid_data is posted', async () => {
     const response = await request(app)
-      .post(`/qa/questions/${test_question_id}/answers`)
+      .post(`/qa/questions/${invalid_question_id}/answers`)
       .send(invalid_data);
       expect(response.status).toEqual(500);
       expect(response.text).toEqual('server post answer error');
