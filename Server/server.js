@@ -117,7 +117,6 @@ app.post('/qa/questions/:question_id/answers', async (req, res) => {
     const answer = answerData.rows[0];
     const answer_id = answer.id;
     if (photos && typeof(photos) === 'object' && photos.length > 0) {
-      console.log({answer_id, photos});
       const answers_photosData = await Promise.all(photos.map(photoUrl => postPhotos(answer_id, photoUrl)));
       answer.photos = answers_photosData.map(answers_photoData => answers_photoData.rows[0]);
     } else {
