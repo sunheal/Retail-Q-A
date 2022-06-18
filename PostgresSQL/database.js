@@ -1,14 +1,31 @@
+require('dotenv').config();
 const { Pool } = require('pg');
 
+//--------Local DB--------//
+// const pool = new Pool({
+//   host: 'localhost',
+//   port: '5432',
+//   user: process.env.postgres_user,
+//   database: process.env.postgres_db,
+//   max: 20, // how many maximum connections do you want?
+//   connectionTimeoutMillis: 0, // how long i should wait for a db to give me a connection if all connections are busy? zero means to wait forever.
+//   idleTimeoutMillis: 0, // if all connections are not in use when do you want db to end. zero means db never end.
+// });
+//--------Local DB--------//
+
+
+//----------AWS EC2 DB----------//
 const pool = new Pool({
-  host: 'localhost',
-  port: '5432',
-  user: 'sunheal',
-  database: 'sdc',
-  max: 20, // how many maximum connections do you want?
-  connectionTimeoutMillis: 0, // how long i should wait for a db to give me a connection if all connections are busy? zero means to wait forever.
-  idleTimeoutMillis: 0, // if all connections are not in use when do you want db to end. zero means db never end.
+  host: process.env.postgres_host,
+  port: process.env.postgres_port,
+  user: process.env.postgres_user,
+  password: process.env.postgres_pw,
+  database: process.env.postgres_db,
+  max: 20,
+  connectionTimeoutMillis: 0,
+  idleTimeoutMillis: 0,
 });
+//----------AWS EC2 DB----------//
 
 // ---------------Non-aggregate Function---------------------//
 // const getQuestions = async (product_id, count, offset) => {
