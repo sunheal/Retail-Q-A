@@ -174,6 +174,12 @@ app.put('/qa/answers/:answer_id/report', async (req, res) => {
   }
 });
 
+app.get('/loaderio-054d0565fa759bd735db92b5af06c13b', (req, res) => {
+  res.sendFile('loaderio-054d0565fa759bd735db92b5af06c13b.html', {root: __dirname});
+})
+
+app.use(express.static('loader'));
+
 if (process.env.NODE_ENV !== "test") {
   app.listen(port, () => {
     console.log(`Server listening on port ${port}`)
