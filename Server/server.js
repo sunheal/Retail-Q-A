@@ -174,8 +174,8 @@ app.put('/qa/answers/:answer_id/report', async (req, res) => {
   }
 });
 
-app.get('/loaderio-054d0565fa759bd735db92b5af06c13b', (req, res) => {
-  res.sendFile('loaderio-054d0565fa759bd735db92b5af06c13b.html', {root: __dirname});
+app.get('/loaderio-24a7a37aaec3c8109f9650a53db3dfb7', (req, res) => {
+  res.sendFile('loaderio-24a7a37aaec3c8109f9650a53db3dfb7.html', {root: __dirname});
 })
 
 app.use(express.static('loader'));
