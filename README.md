@@ -1,4 +1,4 @@
-# rpp34-sunheal-QAs
+# Retail Q&A | Back-end services for e-commerce site
 
 Perform ETL (load csv files to db) and initialize db setups
 
