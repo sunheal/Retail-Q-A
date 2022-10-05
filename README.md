@@ -19,7 +19,7 @@ Testing: Jest, SuperTest, K6, Loader.io, New Relic
 ---
 ## System Design
   ### Database Design
-  ![overview_schema_design](![Screen Shot 2022-05-20 at 11 18 35 PM](https://user-images.githubusercontent.com/91859887/194092129-9732087d-683f-4546-a28c-d2587701220d.png)
+  ![overview_schema_design](https://user-images.githubusercontent.com/91859887/194092129-9732087d-683f-4546-a28c-d2587701220d.png)
 )
   ### Architecture
   ![Architecture](https://user-images.githubusercontent.com/84343573/184517126-bd7eb432-7719-462c-a325-9b558d8b4039.png)
