@@ -1,19 +1,4 @@
 # Retail Q&A | Back-end services for e-commerce site
-
-Perform ETL (load csv files to db) and initialize db setups
-
-In PostgreSQL, run the following queries files:
-
-psql db_name < file_path
-
-1. Run schema.sql
-2. Run copyData.sql (if deployed to cloud, run copyData-AWS-EC2.sql instead)
-3. Run setPrimarykeySequence.sql
-4. Run createIndex.sql
-
-5. After load testing APIs using K6, run deleteK6TestData.sql to delete load test data.
-
-# Retail Q&A | Back-end services for e-commerce site
 I worked with another software engineer to rebuild back-end API service from a monolithic to service-oriented microservices to support our existing e-commerce application in this project. The service I built was scaled to meet the demands of production traffic which is 2000rps with < 1s response time with 0% error rate. 
 
 ## Technologies used
@@ -182,5 +167,20 @@ Testing: Jest, SuperTest, K6, Loader.io, New Relic
 
 ---
 ## Other Services
-Please reference Questions & Answers API Services that make up the Project Atelier API:
-  - <a href='https://github.com/rpp34-sdc-blade/Retail-Q-A'>Questions & Answers</a> by Alan Li
+Please reference Product Overviews API Services that make up the Project Atelier API:
+  - <a href='https://github.com/rpp34-sdc-blade/xinxin-overview'>Product Overviews</a> by Xinxin Li
+ 
+
+  
+Perform ETL (load csv files to db) and initialize db setups
+
+In PostgreSQL, run the following queries files:
+
+psql db_name < file_path
+
+1. Run schema.sql
+2. Run copyData.sql (if deployed to cloud, run copyData-AWS-EC2.sql instead)
+3. Run setPrimarykeySequence.sql
+4. Run createIndex.sql
+
+5. After load testing APIs using K6, run deleteK6TestData.sql to delete load test data.
