@@ -32,66 +32,28 @@ Testing: Jest, SuperTest, K6, Loader.io, New Relic
 
 ---
 ## Usage
-  ### List all products
-  Returns a list of all products of the retail website.
+  ### List all questions
+  Returns a list of all questions about products of the retail website.
 
-  `GET /products/`
+  `GET /qa/questions`
 
   Response: `Status: 200 OK`
-  ```json
-  [
-  {
-        "id": 1,
-        "name": "Camo Onesie",
-        "slogan": "Blend in to your crowd",
-        "description": "The So Fatigues will wake you up and fit you in. This high energy camo will have you blending in to even the wildest surroundings.",
-        "category": "Jackets",
-        "default_price": "140"
-    },
-  {
-        "id": 2,
-        "name": "Bright Future Sunglasses",
-        "slogan": "You've got to wear shades",
-        "description": "Where you're going you might not need roads, but you definitely need some shades. Give those baby blues a rest and let the future shine bright on these timeless lenses.",
-        "category": "Accessories",
-        "default_price": "69"
-    },
-    ...
-]
-  ```
-  ### Get a product's details
-  Return details of a single product
+  <img width="1154" alt="GET /qa/questions" src="https://user-images.githubusercontent.com/91859887/194102731-8ffc792a-ac1c-4b8d-af67-43ec00fb3991.png">
 
-  `GET /products/:product_id`
+  ### Get a list of answers to a specific question
+  Return a list of answers to a specific question of a product
+
+  `GET /qa/questions/:question_id/answers`
 
   *Query Parameters*
 
   | Parameter	 | Type      | Description                                               |
   | ---------- | :-------: | --------------------------------------------------------- |
-  | product_id |  integer  | Required ID of the product for which data should be returned |
+  | question_id |  integer  | Required ID of the question for which data should be returned |
 
   Response: `Status: 200 OK`
-  ```json
-  {
-    "id": 11,
-    "name": "Air Minis 250",
-    "slogan": "Full court support",
-    "description": "This optimized air cushion pocket reduces impact but keeps a perfect balance underfoot.",
-    "category": "Basketball Shoes",
-    "default_price": "0",
-    "features": [
-  	{
-            "feature": "Sole",
-            "value": "Rubber"
-        },
-  	{
-            "feature": "Material",
-            "value": "FullControlSkin"
-        },
-  	// ...
-    ],
-  }
-  ```
+  <img width="1154" alt="GET /qa/questions/:question_id/answers" src="https://user-images.githubusercontent.com/91859887/194103728-4ce813e1-d559-4b91-9101-0e47b75b5506.png">
+ 
   ### Get a single product's styles
   Return all styles of single product
 
