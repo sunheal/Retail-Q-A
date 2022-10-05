@@ -38,7 +38,8 @@ Testing: Jest, SuperTest, K6, Loader.io, New Relic
   `GET /qa/questions`
 
   Response: `Status: 200 OK`
-  <img width="1154" alt="GET /qa/questions" src="https://user-images.githubusercontent.com/91859887/194102731-8ffc792a-ac1c-4b8d-af67-43ec00fb3991.png">
+  
+  <img alt="GET /qa/questions" src="https://user-images.githubusercontent.com/91859887/194102731-8ffc792a-ac1c-4b8d-af67-43ec00fb3991.png">
 
   ### Get a list of answers to a specific question
   Return a list of answers to a specific question of a product
@@ -52,6 +53,7 @@ Testing: Jest, SuperTest, K6, Loader.io, New Relic
   | question_id |  integer  | Required ID of the question for which data should be returned |
 
   Response: `Status: 200 OK`
+  
   <img alt="GET /qa/questions/:question_id/answers" src="https://user-images.githubusercontent.com/91859887/194103728-4ce813e1-d559-4b91-9101-0e47b75b5506.png">
  
   ### Get a single product's styles
