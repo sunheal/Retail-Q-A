@@ -49,6 +49,7 @@ Testing: Jest, SuperTest, K6, Loader.io, New Relic
   
   <img alt="GET /qa/questions" src="https://user-images.githubusercontent.com/91859887/194102731-8ffc792a-ac1c-4b8d-af67-43ec00fb3991.png">
 
+  
   ### Answers List
   Returns answers for a given question. This list does not include any reported answers
 
@@ -64,6 +65,7 @@ Testing: Jest, SuperTest, K6, Loader.io, New Relic
   
   <img alt="GET /qa/questions/:question_id/answers" src="https://user-images.githubusercontent.com/91859887/194103728-4ce813e1-d559-4b91-9101-0e47b75b5506.png">
  
+  
   ### Add a Question
   Adds a question for the given product
 
@@ -80,6 +82,7 @@ Testing: Jest, SuperTest, K6, Loader.io, New Relic
 
   Response: `Status: 201 Created`
 
+  
   ### Mark Question as Helpful
   Updates a question to show it was found helpful
 
@@ -92,6 +95,7 @@ Testing: Jest, SuperTest, K6, Loader.io, New Relic
   | question_id |  integer  | Required ID of the question to update |
 
   Response: `Status: 204 NO CONTENT`
+  
   
   ### Report Question
   Updates a question to show it was reported. Note, this action does not delete the question, but the question will not be returned in the above GET request
@@ -106,6 +110,7 @@ Testing: Jest, SuperTest, K6, Loader.io, New Relic
 
   Response: `Status: 204 NO CONTENT`
   
+  
   ### Mark Answer as Helpful
   Updates an answer to show it was found helpful
 
@@ -118,6 +123,7 @@ Testing: Jest, SuperTest, K6, Loader.io, New Relic
   | answer_id |  integer  | Required ID of the answer to update |
 
   Response: `Status: 204 NO CONTENT`
+  
   
   ### Report Answer
   Updates an answer to show it has been reported. Note, this action does not delete the answer, but the answer will not be returned in the above GET request
@@ -134,26 +140,20 @@ Testing: Jest, SuperTest, K6, Loader.io, New Relic
 
 
 ---
+## DB Initialization and ETL Quaries in Postgres
+  1. Run schema.sql
+  2. Run copyData.sql (if deployed to cloud, run copyData-AWS-EC2.sql instead)
+  3. Run setPrimarykeySequence.sql
+  4. Run createIndex.sql
+  5. After load testing APIs using K6, run deleteK6TestData.sql to delete load test data.
+
+---
 ## Installation
   1. In the terminal inside, run `npm run start` to start server
-  2. Test by typing `http://localhost:5000/products` in the Postman to see the response.
+  2. Test by typing `http://localhost:3000/qa/questions` in the Postman to see the response.
 
 ---
 ## Other Services
-Please reference Product Overviews API Services that make up the Project Atelier API:
+Please reference Product Overviews API Services that make up the other part of the e-commerce app API:
   - <a href='https://github.com/rpp34-sdc-blade/xinxin-overview'>Product Overviews</a> by Xinxin Li
  
-
-  
-Perform ETL (load csv files to db) and initialize db setups
-
-In PostgreSQL, run the following queries files:
-
-psql db_name < file_path
-
-1. Run schema.sql
-2. Run copyData.sql (if deployed to cloud, run copyData-AWS-EC2.sql instead)
-3. Run setPrimarykeySequence.sql
-4. Run createIndex.sql
-
-5. After load testing APIs using K6, run deleteK6TestData.sql to delete load test data.
