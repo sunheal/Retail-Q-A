@@ -52,7 +52,7 @@ Testing: Jest, SuperTest, K6, Loader.io, New Relic
   | question_id |  integer  | Required ID of the question for which data should be returned |
 
   Response: `Status: 200 OK`
-  <img width="1154" alt="GET /qa/questions/:question_id/answers" src="https://user-images.githubusercontent.com/91859887/194103728-4ce813e1-d559-4b91-9101-0e47b75b5506.png">
+  <img alt="GET /qa/questions/:question_id/answers" src="https://user-images.githubusercontent.com/91859887/194103728-4ce813e1-d559-4b91-9101-0e47b75b5506.png">
  
   ### Get a single product's styles
   Return all styles of single product
