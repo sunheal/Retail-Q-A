@@ -1,5 +1,5 @@
 # Retail Q&A | Back-end services for e-commerce site
-I worked with another software engineer to rebuild back-end API service from a monolithic to service-oriented microservices to support our existing e-commerce application in this project. The service I built was scaled to meet the demands of production traffic which is 2000rps with < 1s response time with 0% error rate. 
+I worked with another software engineer to rebuild back-end API service from a monolithic to service-oriented microservices to support our existing e-commerce application in this project. The service I built was scaled to meet the demands of production traffic which is 1000rps with < 1s response time with 0% error rate. 
 
 ## Technologies used
 
@@ -20,13 +20,14 @@ Testing: Jest, SuperTest, K6, Loader.io, New Relic
 ## System Design
   ### Database Design
   ![overview_schema_design](https://user-images.githubusercontent.com/91859887/194092129-9732087d-683f-4546-a28c-d2587701220d.png)
-)
+
   ### Architecture
   ![Architecture](https://user-images.githubusercontent.com/84343573/184517126-bd7eb432-7719-462c-a325-9b558d8b4039.png)
 
   
   ### Stress Test Results via Loader.io
-  <img width="1154" alt="load tests1" src="https://user-images.githubusercontent.com/84343573/184509104-a81c9bb4-a55f-4d9a-912d-5dd102085abc.png">
+  <img width="1154" alt="load tests1" src="https://user-images.githubusercontent.com/91859887/194101176-56a2dab7-3798-4ba8-9438-d3b866d3b014.png
+">
   <img width="1131" alt="load 3" src="https://user-images.githubusercontent.com/84343573/184509116-13f0e4d5-0f9b-4050-840b-7faa15ccddda.png">
   <img width="1153" alt="loader 2" src="https://user-images.githubusercontent.com/84343573/184509123-e7e5bdbf-e0c6-41a7-92f4-bbfae7bbe207.png"
 
